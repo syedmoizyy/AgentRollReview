@@ -1,0 +1,11 @@
+import Link from "next/link";
+import { PageHeader } from "@/components/page-header";
+import { StatusBadge } from "@/components/status-badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { workflows } from "@/lib/sample-data";
+
+export default function DashboardPage() { return <div className="space-y-7"><PageHeader eyebrow="Decision workspace" title="Launch readiness" description="Prioritize the evidence gaps, failed gates, and unresolved reviews that can change a release decision."/>
+  <section className="grid gap-4 md:grid-cols-3"><Card><CardHeader><CardTitle>Active reviews</CardTitle></CardHeader><CardContent><p className="text-3xl font-semibold">2</p><p className="mt-1 text-sm text-slate-500">Fictional sample workflows</p></CardContent></Card><Card><CardHeader><CardTitle>Blocking conditions</CardTitle></CardHeader><CardContent><p className="text-3xl font-semibold text-red-700">3</p><p className="mt-1 text-sm text-slate-500">Across gates and severe failures</p></CardContent></Card><Card><CardHeader><CardTitle>Reviews outstanding</CardTitle></CardHeader><CardContent><p className="text-3xl font-semibold text-amber-700">2</p><p className="mt-1 text-sm text-slate-500">Required before disposition</p></CardContent></Card></section>
+  <Card><CardHeader><CardTitle>Decision queue</CardTitle></CardHeader><CardContent className="divide-y p-0 pt-0">{workflows.map((workflow) => <Link className="grid gap-3 p-5 hover:bg-slate-50 md:grid-cols-[1fr_auto_auto] md:items-center" href={`/workflows/${workflow.slug}`} key={workflow.slug}><div><div className="flex items-center gap-2"><h3 className="font-semibold">{workflow.name}</h3><span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-900">SAMPLE</span></div><p className="mt-1 text-sm text-slate-500">{workflow.owner} · {workflow.risk} risk</p></div><p className="text-sm text-slate-600">{workflow.successRate}% task success</p><StatusBadge status={workflow.decision}/></Link>)}</CardContent></Card>
+  <Card className="border-dashed"><CardContent className="py-8 text-center"><h2 className="font-semibold">No additional workflows</h2><p className="mt-1 text-sm text-slate-500">Create or import a workflow profile when implementation of persistence forms is enabled.</p></CardContent></Card>
+</div>; }

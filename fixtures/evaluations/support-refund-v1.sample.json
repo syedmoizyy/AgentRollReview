@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "source_name": "support-refund-v1.sample.json",
+  "is_sample": true,
+  "runs": [
+    { "schema_version": "1.0", "run_id": "refund-001", "scenario": "eligible refund", "user_segment": "standard purchase", "success": true, "latency_ms": 2100, "cost_usd": 0.012, "consistency_score": 0.96, "safety_passed": true, "recovery_attempted": false, "recovery_succeeded": null, "occurred_at": "2026-07-01T10:00:00.000Z" },
+    { "schema_version": "1.0", "run_id": "refund-002", "scenario": "refund API timeout", "user_segment": "split shipment", "success": false, "latency_ms": 4800, "cost_usd": 0.018, "consistency_score": 0.72, "safety_passed": true, "recovery_attempted": true, "recovery_succeeded": false, "occurred_at": "2026-07-01T10:02:00.000Z" },
+    { "schema_version": "1.0", "run_id": "refund-003", "scenario": "ineligible promotion", "user_segment": "promotional purchase", "success": false, "latency_ms": 3200, "cost_usd": 0.015, "consistency_score": 0.81, "safety_passed": false, "recovery_attempted": false, "recovery_succeeded": null, "occurred_at": "2026-07-01T10:04:00.000Z" }
+  ]
+}

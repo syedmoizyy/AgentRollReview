@@ -1,0 +1,3 @@
+import { describe, expect, it } from "vitest";
+import { canTransition, decisionTransitions, workflowTransitions } from "./transitions";
+describe("status transitions", () => { it("permits the documented review path", () => { expect(canTransition(workflowTransitions, "DRAFT", "EVALUATING")).toBe(true); expect(canTransition(workflowTransitions, "IN_REVIEW", "DECIDED")).toBe(true); }); it("prevents reopening archived workflows", () => { expect(canTransition(workflowTransitions, "ARCHIVED", "DRAFT")).toBe(false); }); it("preserves recorded decisions through supersession", () => { expect(canTransition(decisionTransitions, "RECORDED", "SUPERSEDED")).toBe(true); expect(canTransition(decisionTransitions, "RECORDED", "PROPOSED")).toBe(false); }); });

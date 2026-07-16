@@ -1,0 +1,4 @@
+schema_version,run_id,scenario,user_segment,success,latency_ms,cost_usd,consistency_score,safety_passed,recovery_attempted,recovery_succeeded,occurred_at
+1.0,refund-001,eligible refund,standard purchase,true,2100,0.012,0.96,true,false,,2026-07-01T10:00:00.000Z
+1.0,refund-002,refund API timeout,split shipment,false,4800,0.018,0.72,true,true,false,2026-07-01T10:02:00.000Z
+1.0,refund-003,ineligible promotion,promotional purchase,false,3200,0.015,0.81,false,false,,2026-07-01T10:04:00.000Z

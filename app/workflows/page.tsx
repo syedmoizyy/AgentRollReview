@@ -1,0 +1,7 @@
+import Link from "next/link";
+import { PageHeader } from "@/components/page-header";
+import { StatusBadge } from "@/components/status-badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { workflows } from "@/lib/sample-data";
+export default function WorkflowsPage() { return <div className="space-y-7"><PageHeader title="AI workflow profiles" description="Define intended value, affected users, tools, dependencies, and consequences before judging evaluation results." actions={<Button asChild><Link href="/workflows/new">New workflow</Link></Button>}/><div className="grid gap-4 lg:grid-cols-2">{workflows.map(w => <Card key={w.slug}><CardContent className="space-y-4 pt-5"><div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2"><h2 className="text-lg font-semibold">{w.name}</h2><span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-900">SAMPLE</span></div><p className="mt-1 text-sm text-slate-500">{w.owner}</p></div><StatusBadge status={w.decision}/></div><p className="text-sm leading-6 text-slate-600">{w.value}</p><div className="flex gap-2 text-xs text-slate-600"><span className="rounded bg-slate-100 px-2 py-1">{w.risk} risk</span><span className="rounded bg-slate-100 px-2 py-1">{w.status}</span></div><Button asChild variant="outline"><Link href={`/workflows/${w.slug}`}>Open launch review</Link></Button></CardContent></Card>)}</div></div>; }

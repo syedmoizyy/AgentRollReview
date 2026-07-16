@@ -1,0 +1,309 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WorkflowStatus {
+  DRAFT
+  EVALUATING
+  IN_REVIEW
+  DECIDED
+  ARCHIVED
+}
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+enum SuiteStatus {
+  DRAFT
+  READY
+  RUNNING
+  COMPLETE
+  INVALID
+}
+enum RunStatus {
+  PENDING
+  RUNNING
+  COMPLETE
+  FAILED
+  INVALID
+}
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+enum FailureStatus {
+  OPEN
+  MITIGATED
+  ACCEPTED
+  RESOLVED
+}
+enum GateMetric {
+  TASK_SUCCESS
+  RECOVERY_RATE
+  SAFETY_PASS_RATE
+  P95_LATENCY
+  COST_PER_TASK
+  CONSISTENCY
+  UNRESOLVED_CRITICAL_FAILURES
+}
+enum GateOperator {
+  GREATER_THAN
+  GREATER_THAN_OR_EQUAL
+  LESS_THAN
+  LESS_THAN_OR_EQUAL
+  EQUAL
+  NOT_EQUAL
+}
+enum ReviewRole {
+  PRODUCT
+  ENGINEERING
+  TRUST_SAFETY
+  OPERATIONS
+}
+enum ReviewStatus {
+  DRAFT
+  SUBMITTED
+  SUPERSEDED
+}
+enum Recommendation {
+  SHIP
+  INVESTIGATE
+  BLOCK
+}
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+}
+enum DecisionStatus {
+  PROPOSED
+  RECORDED
+  SUPERSEDED
+}
+enum AttachmentKind {
+  JSON
+  CSV
+  TRACE
+  REPORT
+  MEMO
+  OTHER
+}
+
+model Workspace {
+  id        String          @id @default(cuid())
+  name      String
+  slug      String          @unique
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  workflows AgentWorkflow[]
+  auditEvents AuditEvent[]
+}
+
+model AgentWorkflow {
+  id String @id @default(cuid())
+  workspaceId String
+  name String
+  slug String
+  intendedValue String
+  ownerName String
+  status WorkflowStatus @default(DRAFT)
+  riskLevel RiskLevel
+  affectedUsers String[]
+  tools String[]
+  dependencies String[]
+  failureConsequences String[]
+  isSample Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  suites EvaluationSuite[]
+  failures Failure[]
+  gates GateRule[]
+  reviews Review[]
+  approvals Approval[]
+  decisions ReleaseDecision[]
+  attachments EvidenceAttachment[]
+  auditEvents AuditEvent[]
+  @@unique([workspaceId, slug])
+}
+
+model EvaluationSuite {
+  id String @id @default(cuid())
+  workflowId String
+  name String
+  version Int @default(1)
+  status SuiteStatus @default(DRAFT)
+  required Boolean @default(true)
+  createdAt DateTime @default(now())
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  testCases TestCase[]
+  runs EvaluationRun[]
+}
+
+model TestCase {
+  id String @id @default(cuid())
+  suiteId String
+  externalId String
+  name String
+  scenario String
+  userSegment String
+  expectedOutcome String
+  required Boolean @default(true)
+  suite EvaluationSuite @relation(fields: [suiteId], references: [id], onDelete: Cascade)
+  runs EvaluationRun[]
+  failures Failure[]
+  @@unique([suiteId, externalId])
+}
+
+model EvaluationRun {
+  id String @id @default(cuid())
+  suiteId String
+  testCaseId String
+  externalId String
+  status RunStatus
+  succeeded Boolean?
+  latencyMs Int?
+  costUsd Decimal? @db.Decimal(10, 6)
+  consistencyScore Float?
+  safetyPassed Boolean?
+  recoveryAttempted Boolean @default(false)
+  recoverySucceeded Boolean?
+  schemaVersion String
+  sourceName String
+  sourceChecksum String
+  occurredAt DateTime
+  importedAt DateTime @default(now())
+  suite EvaluationSuite @relation(fields: [suiteId], references: [id], onDelete: Cascade)
+  testCase TestCase @relation(fields: [testCaseId], references: [id], onDelete: Cascade)
+  failures Failure[]
+  @@unique([suiteId, externalId])
+}
+
+model Failure {
+  id String @id @default(cuid())
+  workflowId String
+  testCaseId String?
+  evaluationRunId String?
+  category String
+  severity Severity
+  frequency String
+  affectedSegment String
+  description String
+  consequence String
+  status FailureStatus @default(OPEN)
+  ownerName String?
+  mitigation String?
+  evidenceReference String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  testCase TestCase? @relation(fields: [testCaseId], references: [id], onDelete: SetNull)
+  evaluationRun EvaluationRun? @relation(fields: [evaluationRunId], references: [id], onDelete: SetNull)
+}
+
+model GateRule {
+  id String @id @default(cuid())
+  workflowId String
+  name String
+  metric GateMetric
+  operator GateOperator
+  threshold Float
+  unit String
+  blocking Boolean @default(true)
+  required Boolean @default(true)
+  enabled Boolean @default(true)
+  rationale String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id String @id @default(cuid())
+  workflowId String
+  role ReviewRole
+  reviewerName String
+  status ReviewStatus @default(DRAFT)
+  recommendation Recommendation
+  rationale String
+  concerns String[]
+  conditions String[]
+  submittedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  @@unique([workflowId, role])
+}
+
+model Approval {
+  id String @id @default(cuid())
+  workflowId String
+  role ReviewRole
+  approverName String
+  status ApprovalStatus @default(PENDING)
+  rationale String?
+  decidedAt DateTime?
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model ReleaseDecision {
+  id String @id @default(cuid())
+  workflowId String
+  evidenceVersion String
+  systemRecommendation Recommendation
+  finalOutcome Recommendation?
+  status DecisionStatus @default(PROPOSED)
+  reasonCodes String[]
+  decisionOwner String?
+  overrideRationale String?
+  unresolvedRisks String[]
+  followUpActions Json
+  snapshot Json
+  createdAt DateTime @default(now())
+  decidedAt DateTime?
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model EvidenceAttachment {
+  id String @id @default(cuid())
+  workflowId String
+  kind AttachmentKind
+  fileName String
+  mimeType String
+  byteSize Int
+  checksum String
+  storageReference String
+  schemaVersion String?
+  isSample Boolean @default(false)
+  uploadedBy String
+  createdAt DateTime @default(now())
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model AuditEvent {
+  id String @id @default(cuid())
+  workspaceId String
+  workflowId String?
+  actorName String
+  action String
+  entityType String
+  entityId String
+  before Json?
+  after Json?
+  metadata Json?
+  occurredAt DateTime @default(now())
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workflow AgentWorkflow? @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  @@index([workspaceId, occurredAt])
+  @@index([workflowId, occurredAt])
+}
