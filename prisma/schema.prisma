@@ -63,6 +63,16 @@ enum GateOperator {
   EQUAL
   NOT_EQUAL
 }
+enum GateScope {
+  ALL_RUNS
+  SAFETY_CASES
+  TOOL_FAILURES
+  CRITICAL_FAILURES
+}
+enum GateBehavior {
+  HARD_BLOCK
+  ADVISORY
+}
 enum ReviewRole {
   PRODUCT
   ENGINEERING
@@ -226,6 +236,10 @@ model GateRule {
   threshold Float
   unit String
   blocking Boolean @default(true)
+  scope GateScope @default(ALL_RUNS)
+  severity Severity @default(HIGH)
+  behavior GateBehavior @default(HARD_BLOCK)
+  ownerName String
   required Boolean @default(true)
   enabled Boolean @default(true)
   rationale String
@@ -272,6 +286,8 @@ model ReleaseDecision {
   reasonCodes String[]
   decisionOwner String?
   overrideRationale String?
+  overrideApprover String?
+  overrideReviewDate DateTime?
   unresolvedRisks String[]
   followUpActions Json
   snapshot Json

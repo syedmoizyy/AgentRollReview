@@ -32,9 +32,9 @@ async function main() {
     { workflowId: refund.id, category: "Policy application", severity: "HIGH", frequency: "2 of 100 sample runs", affectedSegment: "Promotional purchases", description: "Promotion exclusion was not consistently applied.", consequence: "Ineligible refund could be issued.", status: "MITIGATED", ownerName: "Refunds team", mitigation: "Add deterministic eligibility check", evidenceReference: "sample-suite-v1" }
   ] });
   await prisma.gateRule.createMany({ data: [
-    { workflowId: refund.id, name: "Task success", metric: "TASK_SUCCESS", operator: "GREATER_THAN_OR_EQUAL", threshold: 0.9, unit: "ratio", blocking: true, rationale: "Sample assumption requiring validation" },
-    { workflowId: refund.id, name: "Tool-failure recovery", metric: "RECOVERY_RATE", operator: "GREATER_THAN_OR_EQUAL", threshold: 0.8, unit: "ratio", blocking: true, rationale: "Sample assumption requiring validation" },
-    { workflowId: refund.id, name: "Safety pass rate", metric: "SAFETY_PASS_RATE", operator: "EQUAL", threshold: 1, unit: "ratio", blocking: true, rationale: "Sample assumption requiring validation" }
+    { workflowId: refund.id, name: "Task success", metric: "TASK_SUCCESS", operator: "GREATER_THAN_OR_EQUAL", threshold: 0.9, unit: "ratio", blocking: true, ownerName: "Product", rationale: "Sample assumption requiring validation" },
+    { workflowId: refund.id, name: "Tool-failure recovery", metric: "RECOVERY_RATE", operator: "GREATER_THAN_OR_EQUAL", threshold: 0.8, unit: "ratio", blocking: true, scope: "TOOL_FAILURES", severity: "CRITICAL", ownerName: "Platform team", rationale: "Sample assumption requiring validation" },
+    { workflowId: refund.id, name: "Safety pass rate", metric: "SAFETY_PASS_RATE", operator: "EQUAL", threshold: 1, unit: "ratio", blocking: true, scope: "SAFETY_CASES", severity: "CRITICAL", ownerName: "Trust & safety", rationale: "Sample assumption requiring validation" }
   ] });
   for (const review of [
     ["PRODUCT", "Maya Chen (fictional)", "SHIP", "Core task performance clears the proposed success gate."],

@@ -22,7 +22,7 @@ npm run db:seed
 npm run dev
 ```
 
-Open `http://localhost:3000`. The UI currently reads its deterministic display fixture directly, while Prisma defines and seeds the persistence model for subsequent form/import integration.
+Open `http://localhost:3000`. The UI currently reads its deterministic display fixture directly, while Prisma defines and seeds the persistence model for subsequent form/import integration. The release-gate workbench evaluates configurable policy against a selected, versioned sample evidence snapshot entirely in the browser.
 
 The Node, Prisma, test, and build commands above were verified in the development workspace. Docker was not installed there, so the Compose startup, migration, and seed commands still require verification on a machine with Docker.
 
@@ -49,7 +49,7 @@ The versioned JSON/CSV contract is documented in `docs/import-format.md`. Equiva
 
 1. Connect the validated profile and evidence forms to Prisma transactions and audit events.
 2. Implement JSON/CSV upload persistence and computed metric snapshots.
-3. Add gate editing, review submission, approvals, and immutable decision snapshots.
+3. Persist gate edits, override audit events, review submission, approvals, and immutable decision snapshots (gate evaluation and override validation are implemented locally).
 4. Export deterministic Markdown/print memos.
 5. Validate gate defaults, evidence sufficiency, permissions, and override policy through the planned 5–8 interviews; none have been completed yet.
 

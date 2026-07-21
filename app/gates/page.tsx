@@ -1,5 +1,9 @@
+import { GateWorkbench } from "@/components/gate-workbench";
 import { PageHeader } from "@/components/page-header";
-import { StatusBadge } from "@/components/status-badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { supportReview } from "@/lib/sample-data";
-export default function GatesPage() { return <div className="space-y-7"><PageHeader eyebrow="Support Refund Agent · Sample" title="Release gates" description="Apply thresholds agreed before the release decision. Blocking failures take precedence over aggregate performance."/><div className="space-y-3">{supportReview.gates.map(g => <Card key={g.name}><CardContent className="grid gap-3 pt-5 md:grid-cols-[1fr_140px_100px_100px] md:items-center"><div><h2 className="font-semibold">{g.name}</h2><p className="mt-1 text-xs text-slate-500">{g.blocking ? "Blocking policy" : "Non-blocking signal"} · Assumption requiring validation</p></div><p className="text-sm"><span className="text-slate-500">Observed </span>{g.observed}</p><StatusBadge status={g.result}/><span className="text-xs font-semibold uppercase text-slate-500">{g.blocking ? "Blocking" : "Advisory"}</span></CardContent></Card>)}</div></div>; }
+
+export default function GatesPage() {
+  return <div className="space-y-7">
+    <PageHeader eyebrow="Support Refund Agent · Fictional sample" title="Release gates" description="Configure explicit policy, evaluate it against a selected evidence run, and preserve accountable exceptions without hiding the system recommendation."/>
+    <GateWorkbench/>
+  </div>;
+}
