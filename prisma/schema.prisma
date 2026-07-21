@@ -84,6 +84,11 @@ enum ReviewStatus {
   SUBMITTED
   SUPERSEDED
 }
+enum ReviewDisposition {
+  APPROVE
+  REJECT
+  ABSTAIN
+}
 enum Recommendation {
   SHIP
   INVESTIGATE
@@ -140,6 +145,7 @@ model AgentWorkflow {
   failures Failure[]
   gates GateRule[]
   reviews Review[]
+  reviewExceptions ReviewException[]
   approvals Approval[]
   decisions ReleaseDecision[]
   attachments EvidenceAttachment[]
@@ -253,16 +259,30 @@ model Review {
   workflowId String
   role ReviewRole
   reviewerName String
+  designatedCritical Boolean @default(false)
+  disposition ReviewDisposition?
   status ReviewStatus @default(DRAFT)
   recommendation Recommendation
   rationale String
   concerns String[]
   conditions String[]
+  evidenceComments Json @default("[]")
+  remediationRequests Json @default("[]")
   submittedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   @@unique([workflowId, role])
+}
+
+model ReviewException {
+  id String @id @default(cuid())
+  workflowId String
+  role ReviewRole
+  rationale String
+  approvedBy String
+  recordedAt DateTime @default(now())
+  workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
 }
 
 model Approval {
@@ -288,6 +308,8 @@ model ReleaseDecision {
   overrideRationale String?
   overrideApprover String?
   overrideReviewDate DateTime?
+  rollbackTriggers String[]
+  nextReviewDate DateTime?
   unresolvedRisks String[]
   followUpActions Json
   snapshot Json

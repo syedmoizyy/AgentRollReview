@@ -7,6 +7,7 @@ async function main() {
   await prisma.evidenceAttachment.deleteMany();
   await prisma.releaseDecision.deleteMany();
   await prisma.approval.deleteMany();
+  await prisma.reviewException.deleteMany();
   await prisma.review.deleteMany();
   await prisma.gateRule.deleteMany();
   await prisma.failure.deleteMany();
@@ -37,17 +38,22 @@ async function main() {
     { workflowId: refund.id, name: "Safety pass rate", metric: "SAFETY_PASS_RATE", operator: "EQUAL", threshold: 1, unit: "ratio", blocking: true, scope: "SAFETY_CASES", severity: "CRITICAL", ownerName: "Trust & safety", rationale: "Sample assumption requiring validation" }
   ] });
   for (const review of [
-    ["PRODUCT", "Maya Chen (fictional)", "SHIP", "Core task performance clears the proposed success gate."],
-    ["ENGINEERING", "Ravi Shah (fictional)", "INVESTIGATE", "Recovery behavior needs a targeted rerun."],
-    ["TRUST_SAFETY", "Elena Park (fictional)", "BLOCK", "Unsafe outcomes and a critical failure remain."],
-    ["OPERATIONS", "Sam Okafor (fictional)", "BLOCK", "Manual escalation cannot absorb observed failures."],
-  ] as const) await prisma.review.create({ data: { workflowId: refund.id, role: review[0], reviewerName: review[1], status: "SUBMITTED", recommendation: review[2], rationale: review[3], concerns: [], conditions: [], submittedAt: new Date("2026-07-02T12:00:00.000Z") } });
+    ["PRODUCT", "Maya Chen (fictional)", "SHIP", "APPROVE", "Core task performance clears the proposed success gate."],
+    ["ENGINEERING", "Ravi Shah (fictional)", "INVESTIGATE", "ABSTAIN", "Recovery behavior needs a targeted rerun."],
+    ["TRUST_SAFETY", "Elena Park (fictional)", "BLOCK", "REJECT", "Unsafe outcomes and a critical failure remain."],
+    ["OPERATIONS", "Sam Okafor (fictional)", "BLOCK", "REJECT", "Manual escalation cannot absorb observed failures."],
+  ] as const) await prisma.review.create({ data: { workflowId: refund.id, role: review[0], reviewerName: review[1], designatedCritical: true, status: "SUBMITTED", recommendation: review[2], disposition: review[3], rationale: review[4], concerns: [], conditions: [], evidenceComments: [], remediationRequests: [], submittedAt: new Date("2026-07-02T12:00:00.000Z") } });
   await prisma.approval.create({ data: { workflowId: refund.id, role: "PRODUCT", approverName: "Decision owner placeholder", status: "PENDING" } });
-  await prisma.releaseDecision.create({ data: { workflowId: refund.id, evidenceVersion: "sample-suite-v1", systemRecommendation: "BLOCK", status: "PROPOSED", reasonCodes: ["BLOCKING_GATE_FAILED:Tool-failure recovery", "BLOCKING_GATE_FAILED:Safety pass rate", "UNRESOLVED_CRITICAL_FAILURE"], unresolvedRisks: ["Tool recovery under partial API failure"], followUpActions: [{ description: "Implement bounded retry and escalation", owner: "Platform team", dueDate: "SAMPLE_PLACEHOLDER" }], snapshot: { sample: true, taskSuccess: 0.91, recoveryRate: 0.42 } } });
+  await prisma.releaseDecision.create({ data: { workflowId: refund.id, evidenceVersion: "sample-suite-v1", systemRecommendation: "BLOCK", finalOutcome: "BLOCK", status: "RECORDED", reasonCodes: ["BLOCKING_GATE_FAILED:Tool-failure recovery", "BLOCKING_GATE_FAILED:Safety pass rate", "UNRESOLVED_CRITICAL_FAILURE"], decisionOwner: "Decision owner placeholder", unresolvedRisks: ["Tool recovery under partial API failure"], rollbackTriggers: ["Any severe safety failure", "Recovery falls below the approved threshold", "Escalation controls are unavailable"], nextReviewDate: new Date("2026-08-08T12:00:00.000Z"), followUpActions: [{ description: "Implement bounded retry and escalation", owner: "Platform team", dueDate: "SAMPLE_PLACEHOLDER" }], snapshot: { sample: true, taskSuccess: 0.91, recoveryRate: 0.42 } } });
   await prisma.evidenceAttachment.create({ data: { workflowId: refund.id, kind: "JSON", fileName: "support-refund-v2.sample.json", mimeType: "application/json", byteSize: 1450, checksum: "sample-not-for-integrity-verification", storageReference: "fixtures/evaluations/support-refund-v2.sample.json", schemaVersion: "2.0", isSample: true, uploadedBy: "Seed script" } });
   await prisma.auditEvent.createMany({ data: [
     { workspaceId: workspace.id, workflowId: refund.id, actorName: "Seed script", action: "WORKFLOW_CREATED", entityType: "AgentWorkflow", entityId: refund.id, metadata: { sample: true } },
     { workspaceId: workspace.id, workflowId: travel.id, actorName: "Seed script", action: "WORKFLOW_CREATED", entityType: "AgentWorkflow", entityId: travel.id, metadata: { sample: true } },
+    { workspaceId: workspace.id, workflowId: refund.id, actorName: "Seed script", action: "EVIDENCE_IMPORTED", entityType: "EvaluationSuite", entityId: suite.id, metadata: { sample: true, evidenceVersion: "sample-suite-v1" } },
+    { workspaceId: workspace.id, workflowId: refund.id, actorName: "Maya Chen (fictional)", action: "GATE_RULE_CHANGED", entityType: "GateRule", entityId: "recovery-gate-sample", metadata: { before: "70%", after: "80%", assumption: true } },
+    { workspaceId: workspace.id, workflowId: refund.id, actorName: "Review fixture", action: "ROLE_REVIEWS_SUBMITTED", entityType: "Review", entityId: "sample-role-reviews", metadata: { roles: ["PRODUCT", "ENGINEERING", "TRUST_SAFETY", "OPERATIONS"], sample: true } },
+    { workspaceId: workspace.id, workflowId: refund.id, actorName: "Decision owner placeholder", action: "OVERRIDE_RECORDED", entityType: "ReleaseDecision", entityId: "sample-override", metadata: { from: "BLOCK", to: "INVESTIGATE", reviewDate: "2026-07-20", sample: true } },
+    { workspaceId: workspace.id, workflowId: refund.id, actorName: "Decision owner placeholder", action: "FINAL_DECISION_RECORDED", entityType: "ReleaseDecision", entityId: "sample-final-decision", metadata: { outcome: "BLOCK", sample: true } },
   ] });
   console.info(JSON.stringify({ level: "info", event: "seed_complete", workspaceId: workspace.id, workflows: 2, sampleData: true }));
 }

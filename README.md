@@ -49,8 +49,8 @@ The versioned JSON/CSV contract is documented in `docs/import-format.md`. Equiva
 
 1. Connect the validated profile and evidence forms to Prisma transactions and audit events.
 2. Implement JSON/CSV upload persistence and computed metric snapshots.
-3. Persist gate edits, override audit events, review submission, approvals, and immutable decision snapshots (gate evaluation and override validation are implemented locally).
-4. Export deterministic Markdown/print memos.
+3. Persist gate edits, role submissions, remediation requests, exceptions, and override audit events (the deterministic local workflows are implemented).
+4. Connect immutable decision snapshots to the implemented Markdown, standalone HTML, and browser print/PDF exports.
 5. Validate gate defaults, evidence sufficiency, permissions, and override policy through the planned 5–8 interviews; none have been completed yet.
 
 Product scope and research assumptions are in `PRODUCT_THESIS.md`, `BUILD_PLAN.md`, and `docs/product`.
