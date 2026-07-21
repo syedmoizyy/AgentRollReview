@@ -27,18 +27,33 @@ Use a lightweight RICE score: `(Reach × Impact × Confidence) / Effort`. Reach 
 
 If capacity tightens, preserve the decision engine, provenance, blocking precedence, visible disagreement, and memo. Reduce visual polish, field breadth, and edit surfaces before removing safeguards.
 
+## Implementation status as of 2026-07-20
+
+This status reflects repository behavior, not user validation or adoption.
+
+| Area | Implemented locally | Remaining |
+| --- | --- | --- |
+| Workflow and evidence | Labeled fictional workflow, documented JSON/CSV contract, local validation, deterministic metrics, row drill-down | Prisma transactions, durable imports, immutable evidence versions |
+| Failures and gates | Failure review helpers; configurable pure gate evaluation; Block/Investigate/Ship precedence and boundary tests | Persisted edits/results and validated production defaults |
+| Stakeholder review | Four role views; identity, rationale, evidence comments, remediation, Approve/Reject/Abstain; critical-role exceptions; visible dissent | Authentication, authorization, durable submissions, notification/coordination |
+| Decision and audit | Deterministic recommendation/override rules; complete memo; Markdown/HTML/browser-print export; seeded import/rule/review/override/decision timeline | Durable append-only audit, immutable snapshots, production export/retention controls |
+| Decision-support analytics | Seeded, explicitly fictional process diagnostics with definitions and denominators | Production instrumentation, data-quality monitoring, baseline measurement, research validation |
+
+Implementation tradeoff: the vertical slice prioritizes pure deterministic domain behavior and a complete inspectable journey over database-backed mutation. Interactive changes currently remain local demo state; the Prisma schema expresses the intended persistence boundary but migrations and live database behavior are not verified here.
+
 ## Next (after research and first slice)
 
-- CSV parity and richer import error recovery.
-- Immutable decision snapshot/version UX.
-- Investigate follow-up workflow and resolution evidence.
-- Risk-tier templates only after threshold research.
-- Stronger accessibility, responsive behavior, and export fidelity.
+- Connect imports, gate edits, failures, reviews, exceptions, overrides, decisions, and audit events through Prisma transactions.
+- Add migrations and immutable decision/evidence snapshot persistence.
+- Instrument the event contract in `EXPERIMENT_PLAN.md` and `LAUNCH_PLAN.md`, including explicit `review_ready_at`.
+- Add Investigate follow-up and resolution evidence without weakening blocking precedence.
+- Conduct accessibility/manual QA and validate browser export fidelity.
+- Run research before introducing risk-tier templates, permission policy, or universal defaults.
 
 ## Later, only with validated demand
 
-Evidence-system integrations, authentication/RBAC, approval policy, notifications, portfolio reporting, retention controls, and deployment/release connections.
+Evidence-system integrations, authentication/RBAC, approval policy, notifications, multi-workspace portfolio reporting, retention controls, and deployment/release connections.
 
 ## Explicitly not planned for MVP
 
-LLM-generated summaries or classifications, agent execution, observability, experiment running, regulatory certification, universal scoring, and fabricated performance or adoption claims.
+LLM-generated summaries or classifications, agent execution, observability, automated experiment assignment, regulatory certification, universal scoring, and fabricated performance or adoption claims. The implemented compact dashboard is limited to seeded single-workspace decision-process diagnostics; it is not portfolio performance reporting.

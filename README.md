@@ -45,12 +45,14 @@ npx playwright install chromium
 
 The versioned JSON/CSV contract is documented in `docs/import-format.md`. Equivalent fictional `2.0` examples are in `fixtures/evaluations`. The Evaluation screen performs local row-level validation and shows a preview before the persistence confirmation step. Missing results are never interpreted as successes, and re-imports create evidence versions.
 
+The Dashboard uses four explicitly fictional seeded review records to demonstrate decision-process analytics. Every metric shows its definition and denominator; these values are not customer outcomes, adoption measures, benchmarks, or evidence that the product reduces review time.
+
 ## Current roadmap
 
 1. Connect the validated profile and evidence forms to Prisma transactions and audit events.
 2. Implement JSON/CSV upload persistence and computed metric snapshots.
 3. Persist gate edits, role submissions, remediation requests, exceptions, and override audit events (the deterministic local workflows are implemented).
 4. Connect immutable decision snapshots to the implemented Markdown, standalone HTML, and browser print/PDF exports.
-5. Validate gate defaults, evidence sufficiency, permissions, and override policy through the planned 5–8 interviews; none have been completed yet.
+5. Instrument the proposed beta and experiment plans, then validate gate defaults, evidence sufficiency, permissions, and override policy through research; no interviews or experiments have been completed yet.
 
 Product scope and research assumptions are in `PRODUCT_THESIS.md`, `BUILD_PLAN.md`, and `docs/product`.

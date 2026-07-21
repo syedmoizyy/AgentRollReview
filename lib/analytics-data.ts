@@ -1,0 +1,8 @@
+import type { AnalyticsReviewRecord } from "./analytics";
+
+export const seededAnalyticsRecords: AnalyticsReviewRecord[] = [
+  { id: "support-refund-v1", reviewReadyAt: "2026-07-17T09:00:00Z", decidedAt: "2026-07-20T12:00:00Z", gates: [{ status: "FAILED" }, { status: "FAILED" }, { status: "PASSED" }, { status: "PASSED" }, { status: "FAILED" }], failures: [{ severity: "CRITICAL", status: "OPEN" }, { severity: "HIGH", status: "MITIGATING" }, { severity: "MEDIUM", status: "OPEN" }], reviewerPositions: ["APPROVE", "ABSTAIN", "REJECT", "REJECT"], requiredEvidenceItems: 8, completeEvidenceItems: 8, outcome: "BLOCK" },
+  { id: "travel-booking-v1", reviewReadyAt: "2026-07-14T10:00:00Z", gates: [{ status: "PASSED" }, { status: "INSUFFICIENT_EVIDENCE" }, { status: "PASSED" }, { status: "FAILED" }], failures: [{ severity: "HIGH", status: "OPEN" }], reviewerPositions: ["ABSTAIN", "REJECT"], requiredEvidenceItems: 8, completeEvidenceItems: 5 },
+  { id: "knowledge-assistant-v1", reviewReadyAt: "2026-07-10T09:00:00Z", decidedAt: "2026-07-11T15:00:00Z", gates: [{ status: "PASSED" }, { status: "PASSED" }, { status: "PASSED" }, { status: "PASSED" }], failures: [{ severity: "MEDIUM", status: "RESOLVED" }], reviewerPositions: ["APPROVE", "APPROVE", "APPROVE", "APPROVE"], requiredEvidenceItems: 7, completeEvidenceItems: 7, outcome: "SHIP" },
+  { id: "claims-triage-v1", reviewReadyAt: "2026-07-08T09:00:00Z", decidedAt: "2026-07-10T15:00:00Z", gates: [{ status: "PASSED" }, { status: "FAILED" }, { status: "PASSED" }, { status: "PASSED" }], failures: [{ severity: "HIGH", status: "MITIGATING" }], reviewerPositions: ["APPROVE", "ABSTAIN", "APPROVE", "APPROVE"], requiredEvidenceItems: 6, completeEvidenceItems: 5, outcome: "INVESTIGATE" },
+];
