@@ -1,0 +1,3 @@
+export type ReviewFailure={id:string;severity:"low"|"medium"|"high"|"critical";status:string;owner:string;duplicateOf?:string;severityRationale?:string};
+export function changeSeverity(f:ReviewFailure,severity:ReviewFailure["severity"],rationale:string):ReviewFailure{if(!rationale.trim())throw new Error("Severity changes require a rationale");return {...f,severity,severityRationale:rationale.trim()}}
+export function mergeDuplicate(primary:ReviewFailure,duplicate:ReviewFailure):ReviewFailure{if(primary.id===duplicate.id)throw new Error("A failure cannot duplicate itself");return {...duplicate,status:"merged",duplicateOf:primary.id}}

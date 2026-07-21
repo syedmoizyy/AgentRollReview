@@ -1,0 +1,7 @@
+{
+  "schema_version":"2.0","source_name":"duplicate-failures.sample.json","is_sample":true,
+  "runs":[
+    {"schema_version":"2.0","run_id":"duplicate-001","test_case_id":"TC-DUP","test_case":"Dependency timeout","expected_behavior":"Escalate once","actual_behavior":"Timed out","passed":false,"severity":"high","latency_ms":9000,"cost_usd":0.02,"tool_calls":["dependency.call"],"evidence_links":["https://example.invalid/evidence/duplicate"],"occurred_at":"2026-07-01T10:00:00.000Z","failure_category":"dependency_failure"},
+    {"schema_version":"2.0","run_id":"duplicate-001","test_case_id":"TC-DUP","test_case":"Dependency timeout","expected_behavior":"Escalate once","actual_behavior":"Timed out","passed":false,"severity":"high","latency_ms":9000,"cost_usd":0.02,"tool_calls":["dependency.call"],"evidence_links":["https://example.invalid/evidence/duplicate"],"occurred_at":"2026-07-01T10:00:00.000Z","failure_category":"dependency_failure"}
+  ]
+}

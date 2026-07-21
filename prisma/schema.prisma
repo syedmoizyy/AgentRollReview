@@ -170,6 +170,8 @@ model EvaluationRun {
   suiteId String
   testCaseId String
   externalId String
+  expectedBehavior String
+  actualBehavior String
   status RunStatus
   succeeded Boolean?
   latencyMs Int?
@@ -186,6 +188,8 @@ model EvaluationRun {
   suite EvaluationSuite @relation(fields: [suiteId], references: [id], onDelete: Cascade)
   testCase TestCase @relation(fields: [testCaseId], references: [id], onDelete: Cascade)
   failures Failure[]
+  toolCalls String[]
+  evidenceLinks String[]
   @@unique([suiteId, externalId])
 }
 
@@ -204,6 +208,8 @@ model Failure {
   ownerName String?
   mitigation String?
   evidenceReference String
+  severityRationale String?
+  duplicateOfId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   workflow AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)

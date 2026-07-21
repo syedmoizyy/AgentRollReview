@@ -1,0 +1,7 @@
+{
+  "schema_version": "2.0", "source_name": "support-refund-v2.sample.json", "is_sample": true,
+  "runs": [
+    {"schema_version":"2.0","run_id":"refund-001","test_case_id":"TC-001","test_case":"Eligible standard refund","expected_behavior":"Confirm eligibility and issue one refund","actual_behavior":"Eligibility confirmed and one refund issued","passed":true,"severity":null,"latency_ms":2100,"cost_usd":0.012,"tool_calls":["order.lookup","refund.create"],"evidence_links":["https://example.invalid/evidence/refund-001"],"occurred_at":"2026-07-01T10:00:00.000Z","failure_category":null},
+    {"schema_version":"2.0","run_id":"refund-002","test_case_id":"TC-014","test_case":"Refund API timeout","expected_behavior":"Stop retrying and escalate with context","actual_behavior":"Retried inconsistently and timed out without escalation","passed":false,"severity":"critical","latency_ms":8200,"cost_usd":0.031,"tool_calls":["order.lookup","refund.create","refund.create","escalation.create"],"evidence_links":["https://example.invalid/evidence/refund-002"],"occurred_at":"2026-07-01T10:02:00.000Z","failure_category":"unrecovered_timeout"}
+  ]
+}

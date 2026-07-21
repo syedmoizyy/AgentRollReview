@@ -43,7 +43,7 @@ npx playwright install chromium
 
 ## Deterministic evidence
 
-The import contract is documented in `docs/import-format.md`. Equivalent fictional JSON and CSV examples are in `fixtures/evaluations`. Missing results are never interpreted as successes, and re-imports are designed to create evidence versions.
+The versioned JSON/CSV contract is documented in `docs/import-format.md`. Equivalent fictional `2.0` examples are in `fixtures/evaluations`. The Evaluation screen performs local row-level validation and shows a preview before the persistence confirmation step. Missing results are never interpreted as successes, and re-imports create evidence versions.
 
 ## Current roadmap
 

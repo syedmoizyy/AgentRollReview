@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { BarChart3, ClipboardCheck, FileCheck2, FlaskConical, GitPullRequestArrow, Settings, ShieldCheck } from "lucide-react";
+import { BarChart3, ClipboardCheck, FileCheck2, FlaskConical, GitPullRequestArrow, Settings, ShieldAlert, ShieldCheck } from "lucide-react";
 
 const links = [
-  ["Dashboard", "/dashboard", BarChart3], ["Workflows", "/workflows", GitPullRequestArrow], ["Evaluations", "/evaluations", FlaskConical],
+  ["Dashboard", "/dashboard", BarChart3], ["Workflows", "/workflows", GitPullRequestArrow], ["Evaluations", "/evaluations", FlaskConical], ["Failures", "/failures", ShieldAlert],
   ["Release gates", "/gates", ShieldCheck], ["Reviews", "/reviews", ClipboardCheck], ["Decisions", "/decisions", FileCheck2], ["Settings", "/settings", Settings],
 ] as const;
 
